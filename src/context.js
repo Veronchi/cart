@@ -7,26 +7,36 @@ const AppContext = React.createContext()
 
 const AppProvider = ({ children }) => {
   const [cart, setCart] = useState(cartItems);
-  const [total, setTotal] = useState(0);
+  const [itemTotal, setItemTotal] = useState(0);
+  const [priceTotal, setPriceTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
       setIsLoading(true);
       const response = await fetch(url);
-      const responceData = await response.json();
+      const cartData = await response.json();
+
       setIsLoading(false);
-      setTotal(responceData.length);
-      setCart(responceData);
+      setCart(cartData);
+      setItemTotal(cartData.length);
+      setPriceTotal(calcTotalPrice(cartData));
     }
     fetchData();
   }, [])
+
+  const calcTotalPrice = (arr) => {
+    const totalPrice = arr.reduce((sum, item) => sum + Number.parseInt(item.price), 0);
+
+    return totalPrice;
+  }
 
   return (
     <AppContext.Provider
       value={{
         cart,
-        total,
+        itemTotal,
+        priceTotal,
         isLoading
       }}
     >
