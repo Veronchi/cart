@@ -15,7 +15,7 @@ const CartContainer = () => {
     )
   }
   return (
-    <section className='cart'> 
+    <section className='cart'>
       <header>
         <h2>your bag</h2>
       </header>

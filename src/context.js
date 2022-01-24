@@ -34,11 +34,13 @@ const AppProvider = ({ children }) => {
     dispatch({ type: 'decrease', payload: id })
   }
 
-
   useEffect(() => {
     fetchData()
   }, [])
 
+  useEffect(() => {
+    dispatch({ type: 'get_totals' })
+  }, [state.cart])
   return (
     <AppContext.Provider
       value={{
@@ -46,7 +48,7 @@ const AppProvider = ({ children }) => {
         clearCart,
         removeItem,
         increase,
-        decrease
+        decrease,
       }}
     >
       {children}
