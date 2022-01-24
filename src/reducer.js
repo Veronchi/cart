@@ -56,6 +56,7 @@ const reducer = (state, action) => {
 
     return { ...state, total, amount }
   }
+  throw new Error('no matching action type')
 }
 
 export default reducer
