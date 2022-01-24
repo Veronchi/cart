@@ -14,6 +14,28 @@ const reducer = (state, action) => {
       cart: state.cart.filter((cartItem) => cartItem.id !== action.payload)
     }
   }
+  if (action.type === 'increase') {
+    let tempCart = state.cart.map((cartItem) => {
+      if (cartItem.id === action.payload) {
+        return { ...cartItem, amount: cartItem.amount + 1 }
+      }
+      return cartItem
+    })
+
+    return { ...state, cart: tempCart }
+  }
+  if (action.type === 'decrease') {
+    let tempCart = state.cart
+      .map((cartItem) => {
+        if (cartItem.id === action.payload) {
+          return { ...cartItem, amount: cartItem.amount - 1 }
+        }
+        return cartItem
+      })
+      .filter((cartItem) => cartItem.amount !== 0)
+
+    return { ...state, cart: tempCart }
+  }
 }
 
 export default reducer
