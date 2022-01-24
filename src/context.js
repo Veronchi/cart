@@ -15,13 +15,19 @@ const initialState = {
 const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const fetchData = async() =>{
-    dispatch({type: 'loading'})
+  const fetchData = async () => {
+    dispatch({ type: 'loading' })
     const response = await fetch(url);
     const cart = await response.json();
-    dispatch({type: 'display_items', payload: cart})
+    dispatch({ type: 'display_items', payload: cart })
   }
-  
+  const clearCart = () => {
+    dispatch({ type: 'clear_cart' })
+  }
+  const removeItem = (id) => {
+    dispatch({type: 'remove', payload: id})
+  }
+
 
   useEffect(() => {
     fetchData()
@@ -31,6 +37,8 @@ const AppProvider = ({ children }) => {
     <AppContext.Provider
       value={{
         ...state,
+        clearCart,
+        removeItem,
       }}
     >
       {children}
