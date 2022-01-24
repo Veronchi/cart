@@ -5,39 +5,32 @@ import reducer from './reducer'
 const url = 'https://course-api.com/react-useReducer-cart-project'
 const AppContext = React.createContext()
 
+const initialState = {
+  isLoading: false,
+  cart: cartItems,
+  total: 0,
+  amount: 0,
+}
+
 const AppProvider = ({ children }) => {
-  const [cart, setCart] = useState(cartItems);
-  const [itemTotal, setItemTotal] = useState(0);
-  const [priceTotal, setPriceTotal] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  const fetchData = async() =>{
+    dispatch({type: 'loading'})
+    const response = await fetch(url);
+    const cart = await response.json();
+    dispatch({type: 'display_items', payload: cart})
+  }
+  
 
   useEffect(() => {
-    async function fetchData() {
-      setIsLoading(true);
-      const response = await fetch(url);
-      const cartData = await response.json();
-
-      setIsLoading(false);
-      setCart(cartData);
-      setItemTotal(cartData.length);
-      setPriceTotal(calcTotalPrice(cartData));
-    }
-    fetchData();
+    fetchData()
   }, [])
-
-  const calcTotalPrice = (arr) => {
-    const totalPrice = arr.reduce((sum, item) => sum + Number.parseInt(item.price), 0);
-
-    return totalPrice;
-  }
 
   return (
     <AppContext.Provider
       value={{
-        cart,
-        itemTotal,
-        priceTotal,
-        isLoading
+        ...state,
       }}
     >
       {children}
